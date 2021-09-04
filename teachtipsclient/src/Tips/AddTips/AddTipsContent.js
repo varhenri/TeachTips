@@ -1,0 +1,73 @@
+import React from 'react';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import { addTip } from '../../Store/tip';
+
+const useStyles = makeStyles((theme) => ({
+    submit: {
+        marginTop:theme.spacing(2)
+    },
+  }));
+  
+const validationSchema = yup.object({
+  title: yup
+    .string('Enter a title')
+    .max(50, 'Maximum title length is 50 characters')
+    .required('Title is required'),
+  text: yup
+    .string('Enter your text')
+    .max(5000, 'Maximum text length is 5000 characters')
+    .required('Text is required'),
+});
+
+const AddTipsContent = (props) => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      text: ""
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      dispatch(addTip(values));
+    },
+  });
+
+  return (
+    <div>
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          id="title"
+          name="title"
+          label="Title"
+          value={formik.values.title}
+          onChange={formik.handleChange}
+          error={formik.touched.title && Boolean(formik.errors.title)}
+          helperText={formik.touched.title && formik.errors.title}
+        />
+        <TextField
+          fullWidth
+          id="text"
+          name="text"
+          label="Text"
+          type="text"
+          value={formik.values.text}
+          onChange={formik.handleChange}
+          error={formik.touched.text && Boolean(formik.errors.text)}
+          helperText={formik.touched.text && formik.errors.text}
+        />
+        <Button color="primary" variant="contained" fullWidth className={classes.submit} type="submit">
+          Add tip
+        </Button>
+      </form>
+    </div>
+  );
+};
+
+export default AddTipsContent;

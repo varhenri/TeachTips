@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TeachTips.Core.IConfiguration;
+using TeachTips.DTO;
 
 namespace TeachTips.Controllers
 {
@@ -32,6 +33,20 @@ namespace TeachTips.Controllers
                 _logger.LogError(e, "Failed at TipController GET");
             }
 
+            return StatusCode(500);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(TipAddDTO dto)
+        {
+            try {
+                var tips = await _unitOfWork.Tips.Add(dto.ToEntity());
+                await _unitOfWork.CompleteAsync();
+                return Ok(dto);
+            }
+            catch(Exception e){
+                _logger.LogError(e, "Failed at TipController GET");
+            }
             return StatusCode(500);
         }
     }
