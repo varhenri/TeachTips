@@ -13,6 +13,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import TipsList from './TipsList';
 import AddTipsModal from './AddTips/AddTipsModal';
+import { changeSearchParam } from '../Store/tip';
+import { useDispatch } from 'react-redux';
 
 const styles = (theme) => ({
   paper: {
@@ -35,6 +37,11 @@ const styles = (theme) => ({
 });
 
 const TipsContent = (props) => {
+  const dispatch = useDispatch();
+  const handleSearchTextChange = (e) => {
+    dispatch(changeSearchParam(e.target.value));
+  }
+
   const { classes } = props;
   return (
     <Paper className={classes.paper}>
@@ -47,11 +54,12 @@ const TipsContent = (props) => {
             <Grid item xs>
               <TextField
                 fullWidth
-                placeholder="Search by email address, phone number, or user UID"
+                placeholder="Search by title, text or category"
                 InputProps={{
                   disableUnderline: true,
                   className: classes.searchInput,
                 }}
+                onChange={handleSearchTextChange}
               />
             </Grid>
             <Grid item>

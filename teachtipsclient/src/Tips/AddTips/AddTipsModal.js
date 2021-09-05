@@ -87,7 +87,9 @@ export default function AddTipsModal() {
         <Fade in={open}>
           <div className={classes.paper}>
             <h2 id="spring-modal-title">Add tips</h2>
-            <AddTipsContent></AddTipsContent>
+            <AddTipsContent
+              handleModalClose={handleClose}
+            />
           </div>
         </Fade>
       </Modal>

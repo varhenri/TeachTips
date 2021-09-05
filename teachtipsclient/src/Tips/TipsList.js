@@ -8,12 +8,11 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
-import { getTips } from '../Store/tip';
+import { getTips, getIsLoading } from '../Store/tip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    maxWidth: '36ch',
     backgroundColor: theme.palette.background.paper,
   },
   inline: {
@@ -24,17 +23,22 @@ const useStyles = makeStyles((theme) => ({
 const TipsList = (props) => {
     const classes = useStyles();
     const tips = useSelector(getTips);
+    const isLoading = useSelector(getIsLoading);
+
+    if(isLoading){
+        return null;
+    }
+
     return (
       <List className={classes.root}>
           {(tips || []).map((item) => 
               <React.Fragment>
-                  <ListItem alignItems="flex-start">
+                  <ListItem button divider>
                       <ListItemText
-                      primary={item.title}
-                      secondary={item.text}
+                      primary={item.tipTitle}
+                      secondary={item.tipText}
                       />
                   </ListItem>
-                  <Divider variant="inset" component="li" />
               </React.Fragment>
           )}
       </List>

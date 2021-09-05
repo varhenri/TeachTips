@@ -4,8 +4,6 @@ import { categoryReducer } from './category';
 import { tipReducer } from "./tip";
 
 
-
-
 export const store = createStore(
     combineReducers({
         tip: tipReducer,

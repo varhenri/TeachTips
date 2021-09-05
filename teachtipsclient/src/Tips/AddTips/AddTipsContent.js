@@ -35,6 +35,7 @@ const AddTipsContent = (props) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       dispatch(addTip(values));
+      props.handleModalClose();
     },
   });
 
@@ -61,6 +62,9 @@ const AddTipsContent = (props) => {
           onChange={formik.handleChange}
           error={formik.touched.text && Boolean(formik.errors.text)}
           helperText={formik.touched.text && formik.errors.text}
+          multiline
+          rows={1}
+          rowsMax={6}
         />
         <Button color="primary" variant="contained" fullWidth className={classes.submit} type="submit">
           Add tip

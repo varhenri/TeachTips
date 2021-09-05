@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,10 +40,10 @@ namespace TeachTips.Controllers
             try {
                 var tips = await _unitOfWork.Tips.Add(dto.ToEntity());
                 await _unitOfWork.CompleteAsync();
-                return Ok(dto);
+                return Ok(await _unitOfWork.Tips.All());
             }
             catch(Exception e){
-                _logger.LogError(e, "Failed at TipController GET");
+                _logger.LogError(e, "Failed at TipController POST");
             }
             return StatusCode(500);
         }
