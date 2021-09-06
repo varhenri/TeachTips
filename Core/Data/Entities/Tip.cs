@@ -8,7 +8,7 @@ namespace TeachTips.Core.Data.Entities
         public string TipText { get; set; }
         public string TipTitle { get; set; }
         public DateTime Timestamp { get; set; }
-        public IList<TipCategory> Categories { get; set; }
+        public virtual IList<TipCategory> Categories { get; set; } = new List<TipCategory>();
         public Tip(){}
     }
 }

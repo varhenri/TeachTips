@@ -6,9 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from "./Store/store";
 import { getInitialTipsData } from "./Store/tip";
+import { getInitialCategoriesData } from "./Store/category";
 
 //Get inital tips data before react starts
 store.dispatch(getInitialTipsData);
+store.dispatch(getInitialCategoriesData);
 
 ReactDOM.render(
   <Provider store={store}>

@@ -8,11 +8,20 @@ namespace TeachTips.Core.Data
     {
         public DbSet<Category> Category { get; set; }
         public DbSet<Tip> Tip { get; set; }
-
+        public DbSet<TipCategory> TipCategory { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
         {
-
         }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<TipCategory>()
+                .HasOne(p => p.Tip)
+                .WithMany(p => p.Categories)
+                .HasForeignKey(tc => tc.TipId);
+        }
+
     }
 }

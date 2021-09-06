@@ -8,6 +8,10 @@ export const getTipsList = () => {
     return get("https://localhost:5001/Tip");
 }
 
+export const getAvailableCategories = () => {
+    return get("https://localhost:5001/Category");
+}
+
 export const get = (url, payload) => {
     return axios.get(url, payload, {
         headers: {

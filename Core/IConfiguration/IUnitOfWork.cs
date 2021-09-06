@@ -5,7 +5,7 @@ namespace TeachTips.Core.IConfiguration {
     public interface IUnitOfWork
     {
         ITipRepository Tips { get; }
-
+        ICategoryRepository Categories { get; }
         Task CompleteAsync();
     }
 }

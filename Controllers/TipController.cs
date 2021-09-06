@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TeachTips.Core.Data.Entities;
 using TeachTips.Core.IConfiguration;
 using TeachTips.DTO;
 
@@ -24,8 +28,10 @@ namespace TeachTips.Controllers
         public async Task<IActionResult> Get()
         {
             try {
-                var tips = await _unitOfWork.Tips.All();
-                return Ok(tips);
+                var tips = await _unitOfWork.Tips.GetAllWithCategories();
+                IList<TipReturnDTO> returnDTOs = tips.Select(tip => new TipReturnDTO(tip)).ToList();
+
+                return Ok(returnDTOs);
             }
             catch(Exception e){
                 _logger.LogError(e, "Failed at TipController GET");
@@ -38,9 +44,17 @@ namespace TeachTips.Controllers
         public async Task<IActionResult> Post(TipAddDTO dto)
         {
             try {
-                var tips = await _unitOfWork.Tips.Add(dto.ToEntity());
+                Tip tip = dto.ToEntity();
+                IList<Category> categories = await _unitOfWork.Categories.GetByIdList(dto.Categories);
+                tip.Categories = categories.Select(category => new TipCategory(tip, category)).ToList();
+
+                var success = await _unitOfWork.Tips.Add(tip);
                 await _unitOfWork.CompleteAsync();
-                return Ok(await _unitOfWork.Tips.All());
+                
+                IList<Tip> tips =  await _unitOfWork.Tips.GetAllWithCategories();
+
+                IList<TipReturnDTO> returnDTOs = tips.Select(tip => new TipReturnDTO(tip)).ToList();
+                return Ok(returnDTOs);
             }
             catch(Exception e){
                 _logger.LogError(e, "Failed at TipController POST");

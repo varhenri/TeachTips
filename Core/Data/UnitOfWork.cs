@@ -13,13 +13,14 @@ namespace TeachTips.Core.Data{
         private readonly ILogger _logger;
 
         public ITipRepository Tips { get; private set; }
-
+        public ICategoryRepository Categories { get; private set; }
         public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
             _logger = loggerFactory.CreateLogger("logs");
 
             Tips = new TipRepository(context, _logger);
+            Categories = new CategoryRepository(context, _logger);
         }
 
         public async Task CompleteAsync()

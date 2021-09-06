@@ -1,10 +1,9 @@
-import { SatelliteTwoTone } from '@material-ui/icons';
 import { postNewTip, getTipsList } from '../api';
 
 const initialState = {
     isLoading: false,
     searchParameter: "",
-    filteredTips: [],
+    searchCategories: [],
     tips: []
 };
 
@@ -26,6 +25,10 @@ export function tipReducer(state = initialState, action){
         case CHANGE_SEARCH_PARAM:{
             return {...state, searchParameter: action.payload};
         }
+        case CHANGE_CATEGORY_SEARCH_PARAM:{
+            console.log(action.payload);
+            return {...state, searchCategories: action.payload};
+        }
         default:
             return state;
     }
@@ -33,13 +36,35 @@ export function tipReducer(state = initialState, action){
 
 //selectors
 export const getTips = (state) => {
-    if(state.tip.searchParameter.length === 0)
+    const searchParamCondition = (value) => {
+        return value.text.includes(state.tip.searchParameter) ||
+        value.title.includes(state.tip.searchParameter);
+    }
+
+    const searchFilterCondition = (value) => {
+        const searchCategories = state.tip.searchCategories;
+        if(searchCategories.length > 0)
+        {
+            let found = false;
+            for(let i = 0; i < searchCategories.length; i++)
+            {
+                if(value.categories.find(cat1 => cat1.id === searchCategories[i].value))
+                {
+                    found = true;
+                }
+            }
+
+            if(!found)
+            {
+                return false;
+            }
+        }
+        return searchParamCondition(value);
+    }
+
+    if(state.tip.searchParameter.length === 0 && state.tip.searchCategories.length === 0)
     {
         return state.tip.tips;
-    }
-    const searchFilterCondition = (value) => {
-        return value.tipText.includes(state.tip.searchParameter) ||
-        value.tipTitle.includes(state.tip.searchParameter);
     }
 
     return state.tip.tips.filter(value => searchFilterCondition(value));
@@ -58,8 +83,18 @@ export const GET_TIPS_SUCCESS = "tip/getTipsSuccess";
 export const GET_TIPS_FAILURE = "tip/getTipsFailure";
 
 export const CHANGE_SEARCH_PARAM = "tip/changeSearchParam";
+export const CHANGE_CATEGORY_SEARCH_PARAM = "tip/changeCategorySearchParam";
 
 //action creators
+export function changeCategorySearchParam(param){
+    return function changeSearchParamThunk(dispatch){
+        dispatch({
+            type: CHANGE_CATEGORY_SEARCH_PARAM,
+            payload: param
+        });
+    }
+}
+
 export function changeSearchParam(param){
     return function changeSearchParamThunk(dispatch){
         dispatch({

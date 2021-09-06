@@ -6,11 +6,17 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { addTip } from '../../Store/tip';
+import Select from 'react-select';
+import { useSelector } from 'react-redux';
+import { getCategoriesForReactSelect } from '../../Store/category';
 
 const useStyles = makeStyles((theme) => ({
     submit: {
         marginTop:theme.spacing(2)
     },
+    select: {
+        marginTop:theme.spacing(2)
+    }
   }));
   
 const validationSchema = yup.object({
@@ -27,18 +33,24 @@ const validationSchema = yup.object({
 const AddTipsContent = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const categories = useSelector(getCategoriesForReactSelect);
+
   const formik = useFormik({
     initialValues: {
       title: "",
-      text: ""
+      text: "",
+      categories: []
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      dispatch(addTip(values));
+      const categoryIds = values.categories.map(value => value.value);
+      const payload = {...values, categories: categoryIds };
+
+      dispatch(addTip(payload));
       props.handleModalClose();
     },
   });
-
+  
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
@@ -65,6 +77,15 @@ const AddTipsContent = (props) => {
           multiline
           rows={1}
           rowsMax={6}
+        />
+        <Select
+            isMulti
+            onChange={(value) => formik.setFieldValue("categories", value)}
+            value={formik.values.categories}
+            options={categories}
+            className={"basic-multi-select " + classes.select}
+            classNamePrefix="select"
+            placeholder="Select category..."
         />
         <Button color="primary" variant="contained" fullWidth className={classes.submit} type="submit">
           Add tip

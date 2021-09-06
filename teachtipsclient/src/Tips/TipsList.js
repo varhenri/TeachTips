@@ -2,13 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { getTips, getIsLoading } from '../Store/tip';
+import Chip from '@material-ui/core/Chip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
   inline: {
     display: 'inline',
   },
+  chipStyle: {
+    margin: '3px'
+  }
 }));
 
 const TipsList = (props) => {
@@ -35,9 +35,14 @@ const TipsList = (props) => {
               <React.Fragment>
                   <ListItem button divider>
                       <ListItemText
-                      primary={item.tipTitle}
-                      secondary={item.tipText}
+                        primary={item.title}
+                        secondary={item.text}
                       />
+                      {
+                          (item.categories || []).map((category) =>
+                            <Chip color="green" className={classes.chipStyle} label={category.name} size="small"/>
+                          )
+                      }
                   </ListItem>
               </React.Fragment>
           )}

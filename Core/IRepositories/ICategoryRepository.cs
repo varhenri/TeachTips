@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using TeachTips.Core.Data.Entities;
 
 namespace TeachTips.Core.IRepositories  {
-    public interface ITipRepository : IRepository<Tip>
+    public interface ICategoryRepository : IRepository<Category>
     {
-        Task<IList<Tip>> GetAllWithCategories();
+        Task<IList<Category>> GetByIdList(long[] ids);
     }
     
 }

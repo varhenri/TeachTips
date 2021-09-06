@@ -11,16 +11,18 @@ import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import TipsList from './TipsList';
 import AddTipsModal from './AddTips/AddTipsModal';
-import { changeSearchParam } from '../Store/tip';
-import { useDispatch } from 'react-redux';
+import TipsList from './TipsList';
+import { getTipsData, changeSearchParam, changeCategorySearchParam } from '../Store/tip';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategories, getCategoriesForReactSelect } from '../Store/category';
+
+import Select from 'react-select';
 
 const styles = (theme) => ({
   paper: {
     maxWidth: 936,
-    margin: 'auto',
-    overflow: 'hidden',
+    margin: 'auto'
   },
   searchBar: {
     borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
@@ -34,12 +36,28 @@ const styles = (theme) => ({
   contentWrapper: {
     margin: '40px 16px',
   },
+  chipsWrapper: {
+    margin: '0px 0px',
+  },
+  chipStyle: {
+    margin: '3px'
+  }
 });
 
 const TipsContent = (props) => {
   const dispatch = useDispatch();
+  const reactSelectCategories = useSelector(getCategoriesForReactSelect);
+
   const handleSearchTextChange = (e) => {
     dispatch(changeSearchParam(e.target.value));
+  }
+
+  const handleSearchCategoryChange = (value) => {
+    dispatch(changeCategorySearchParam(value));
+  }
+
+  const handleRefresh = () => {
+    dispatch(getTipsData());
   }
 
   const { classes } = props;
@@ -54,7 +72,7 @@ const TipsContent = (props) => {
             <Grid item xs>
               <TextField
                 fullWidth
-                placeholder="Search by title, text or category"
+                placeholder="Filter by title or text"
                 InputProps={{
                   disableUnderline: true,
                   className: classes.searchInput,
@@ -62,11 +80,21 @@ const TipsContent = (props) => {
                 onChange={handleSearchTextChange}
               />
             </Grid>
+            <Grid item xs>
+              <Select
+                  isMulti
+                  onChange={handleSearchCategoryChange}
+                  options={reactSelectCategories}
+                  className={"basic-multi-select " + classes.select}
+                  classNamePrefix="select"
+                  placeholder="Filter by categories"
+              />
+            </Grid>
             <Grid item>
               <AddTipsModal />
               <Tooltip title="Reload">
                 <IconButton>
-                  <RefreshIcon className={classes.block} color="inherit" />
+                  <RefreshIcon className={classes.block} onClick={handleRefresh} color="inherit" />
                 </IconButton>
               </Tooltip>
             </Grid>
