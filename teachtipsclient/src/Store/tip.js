@@ -26,7 +26,6 @@ export function tipReducer(state = initialState, action){
             return {...state, searchParameter: action.payload};
         }
         case CHANGE_CATEGORY_SEARCH_PARAM:{
-            console.log(action.payload);
             return {...state, searchCategories: action.payload};
         }
         default:

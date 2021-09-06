@@ -4,10 +4,9 @@ import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
-import { addTip } from '../../Store/tip';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import { useSelector } from 'react-redux';
+import { addTip } from '../../Store/tip';
 import { getCategoriesForReactSelect } from '../../Store/category';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,10 +46,11 @@ const AddTipsContent = (props) => {
       const payload = {...values, categories: categoryIds };
 
       dispatch(addTip(payload));
+      //should close after promise resolves
       props.handleModalClose();
     },
   });
-  
+
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
