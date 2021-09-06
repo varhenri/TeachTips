@@ -52,8 +52,8 @@ namespace TeachTips.Controllers
                 await _unitOfWork.CompleteAsync();
                 
                 IList<Tip> tips =  await _unitOfWork.Tips.GetAllWithCategories();
-
                 IList<TipReturnDTO> returnDTOs = tips.Select(tip => new TipReturnDTO(tip)).ToList();
+                
                 return Ok(returnDTOs);
             }
             catch(Exception e){
